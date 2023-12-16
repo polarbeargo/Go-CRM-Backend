@@ -18,7 +18,7 @@ var customers = map[string]string{
 
 func getCustomers(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-
+	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(customers)
 }
 
@@ -39,7 +39,7 @@ func deleteCustomers(w http.ResponseWriter, r *http.Request) {
 func main() {
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc("/customers", getCustomers).Methods("GET")
-	router.HandleFunc("/deleteMember/{id}", deleteCustomers).Methods("DELETE")
+	router.HandleFunc("/deleteCustomers/{id}", deleteCustomers).Methods("DELETE")
 
 	fmt.Println("Server is starting on port 3000...")
 	log.Fatal(http.ListenAndServe(":3000", router))
