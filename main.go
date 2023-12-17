@@ -27,7 +27,12 @@ var database = []Customer{
 	{ID: 3, Name: "Peter", Role: "CFO", Email: "peter678@hotmail.com,", Phone: "87654321", Contacted: true},
 }
 
-func deleteCustomers(w http.ResponseWriter, r *http.Request) {
+func html(w http.ResponseWriter, r *http.Request) {
+	// http serve file index.html
+	http.ServeFile(w, r, "index.html")
+}
+
+func deleteCustomer(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 	// Get the customer ID from the URL path parameter
@@ -60,7 +65,7 @@ func getCustomer(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNotFound)
 }
 
-func createCustomer(w http.ResponseWriter, r *http.Request) {
+func addCustomer(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	// Implement the logic to add a new customer to the database
 	var newCustomer Customer
@@ -98,13 +103,16 @@ func getCustomers(w http.ResponseWriter, r *http.Request) {
 func main() {
 	// Creating a new router
 	router := mux.NewRouter().StrictSlash(true)
+
+	// Serve static HTML at the home ("/") route
+	router.HandleFunc("/", html)
 	router.HandleFunc("/customers/{id}", getCustomer).Methods("GET")
 	// Creating a customer through a /customers path
-	router.HandleFunc("/customers", createCustomer).Methods("POST")
+	router.HandleFunc("/customers", addCustomer).Methods("POST")
 	router.HandleFunc("/customers", getCustomers).Methods("GET")
 	// Updating a customer through a /customers/{id} path
 	router.HandleFunc("/customers/{id}", updateCustomer).Methods("PUT")
-	router.HandleFunc("/deleteCustomers/{id}", deleteCustomers).Methods("DELETE")
+	router.HandleFunc("/deleteCustomer/{id}", deleteCustomer).Methods("DELETE")
 
 	fmt.Println("Server is starting on port 3000...")
 	log.Fatal(http.ListenAndServe(":3000", router))
