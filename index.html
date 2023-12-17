@@ -1,0 +1,67 @@
+<!-- Create a html for  RESTful server endpoints getCustomer, addCustomer, getCustomers, updateCustomer, deleteCustomer for CRUD operations -->
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Go-CRM-Backend</title>
+    </head>
+    <body>
+        <h1>Go-CRM-Backend</h1>
+        <p>RESTful server endpoints getCustomer, addCustomer, getCustomers, updateCustomer, deleteCustomer for CRUD operations</p>
+        <p>Endpoints:</p>
+        <ul>
+            <li>getCustomer</li>
+            <li>addCustomer</li>
+            <li>getCustomers</li>
+            <li>updateCustomer</li>
+            <li>deleteCustomer</li>
+        </ul>
+        <p>Example:</p>
+        <ul>
+            <li>http://localhost:3000/getCustomer?id=1</li>
+            <li>http://localhost:3000/addCustomer?name=John&email=john@gmail&phone=1234567890</li>
+            <li>http://localhost:3000/getCustomers</li>
+            <li>http://localhost:3000/updateCustomer?id=1&name=John&email=john@gmail&phone=1234567890</li>
+            <li>http://localhost:3000/deleteCustomer?id=1</li>
+        </ul>
+        <table>
+            <tr>
+                <th>HTTP Method</th>
+                <th>URL Path</th>
+                <th>Parameters</th>
+                <th>Response</th>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td>/customers/{id}</td>
+                <td>id</td>
+                <td>Customer</td>
+            </tr>
+            <tr>
+                <td>POST</td>
+                <td>/customers</td>
+                <td>name, email, phone</td>
+                <td>Customer</td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td>/customers</td>
+                <td></td>
+                <td>Customers</td>
+            </tr>   
+            <tr>
+                <td>PUT</td>
+                <td>/customers/{id}</td>
+                <td>id, name, email, phone</td>
+                <td>Customer</td>
+            </tr>
+            <tr>
+                <td>DELETE</td>
+                <td>/deleteCustomer/{id}</td>
+                <td>id</td>
+                <td>Customer</td>
+            </tr>
+        </table>
+    </body>
+</html>
+
