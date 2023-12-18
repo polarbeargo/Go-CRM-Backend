@@ -36,7 +36,7 @@ func deleteCustomer(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 	// Get the customer ID from the URL path parameter
-	customerID := params["ID"]
+	customerID := params["id"]
 	// Implement the logic to delete the customer with the given ID from the database
 	for index, customer := range database {
 		if customerID == fmt.Sprintf("%v", customer.ID) {
@@ -53,7 +53,7 @@ func getCustomer(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 	// Get the customer ID from the URL path parameter
-	customerID := params["ID"]
+	customerID := params["id"]
 	// Implement the logic to retrieve the customer with the given ID from the database
 	for _, customer := range database {
 		if customerID == fmt.Sprintf("%v", customer.ID) {
@@ -67,25 +67,33 @@ func getCustomer(w http.ResponseWriter, r *http.Request) {
 
 func addCustomer(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	// Implement the logic to add a new customer to the database
+
+	// Implement two entries with same id should not exist in the database
 	var newCustomer Customer
 	json.NewDecoder(r.Body).Decode(&newCustomer)
-	database = append(database, newCustomer)
-	w.WriteHeader(http.StatusCreated)
+	for _, customer := range database {
+		if newCustomer.ID == customer.ID {
+			w.WriteHeader(http.StatusConflict)
+			return
+		}
+		// Implement the logic to add a new customer to the database
+		database = append(database, newCustomer)
+		w.WriteHeader(http.StatusCreated)
+	}
 }
 
 func updateCustomer(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 	// Get the customer ID from the URL path parameter
-	customerID := params["ID"]
+	customerID := params["id"]
 	// Implement the logic to update the customer with the given ID in the database
 	var updatedCustomer Customer
 	json.NewDecoder(r.Body).Decode(&updatedCustomer)
 	for index, customer := range database {
 		if customerID == fmt.Sprintf("%v", customer.ID) {
 			database[index] = updatedCustomer
-			w.WriteHeader(http.StatusNoContent)
+			w.WriteHeader(http.StatusOK)
 			return
 		}
 	}
@@ -112,7 +120,7 @@ func main() {
 	router.HandleFunc("/customers", getCustomers).Methods("GET")
 	// Updating a customer through a /customers/{id} path
 	router.HandleFunc("/customers/{id}", updateCustomer).Methods("PUT")
-	router.HandleFunc("/deleteCustomer/{id}", deleteCustomer).Methods("DELETE")
+	router.HandleFunc("/customers/{id}", deleteCustomer).Methods("DELETE")
 
 	fmt.Println("Server is starting on port 3000...")
 	log.Fatal(http.ListenAndServe(":3000", router))
